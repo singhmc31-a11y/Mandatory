@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CRITICAL DEVICE FAILURE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: black;
+      color: red;
+      font-family: monos pace;
+      text-align: center;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+    }
+    .blink {
+      animation: blink 0.3s infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    .small {
+      font-size: 14px;
+      color: orange;
+    }
+    button {
+      background: red;
+      color: black;
+      font-size: 18px;
+      border: none;
+      padding: 12px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="blink">⚠️ CRITICAL SYSTEM ERROR ⚠️</h1>
+  <p>Device integrity compromised</p>
+
+  <p id="battery">🔋 Battery: 100%</p>
+  <p id="wipe">🧨 Device wipe in: 30s</p>
+
+  <p class="small">Tap to attempt repair</p>
+  <button onclick="startChaos()">ATTEMPT REPAIR</button>
+
+  <script>
+    let started = false;
+
+    function startChaos() {
+      if (started) return;
+      started = true;
+
+      // 🔊 SOUND (annoying beep)
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      function beep() {
+        const osc = audioCtx.createOscillator();
+        osc.type = "square";
+        osc.frequency.setValueAtTime(
+          200 + Math.random() * 800,
+          audioCtx.currentTime
+        );
+        osc.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+      }
+
+      setInterval(beep, 1200);
+
+      // 📳 RANDOM VIBRATION
+      if (navigator.vibrate) {
+        setInterval(() => {
+          navigator.vibrate([
+            100 + Math.random() * 300,
+            50,
+            100 + Math.random() * 300
+          ]);
+        }, 1500);
+      }
+
+      // 🔋 Fake battery drain
+      let battery = 100;
+      setInterval(() => {
+        battery--;
+        if (battery < 0) battery = 0;
+        document.getElementById("battery").innerText =
+          "🔋 Battery: " + battery + "%";
+      }, 500);
+
+      // 🧨 Fake wipe countdown
+      let wipe = 30;
+      setInterval(() => {
+        wipe--;
+        if (wipe < 0) wipe = 0;
+        document.getElementById("wipe").innerText =
+          "🧨 Device wipe in: " + wipe + "s";
+      }, 1000);
+
+      // 💥 Infinite alerts
+      const messages = [
+        "❌ SYSTEM ERROR",
+        "⚠️ DEVICE FAILURE",
+        "💀 DATA CORRUPTION",
+        "🔥 OVERHEATING",
+        "🚫 EXIT BLOCKED",
+        "📵 INPUT DISABLED",
+        "🚨 SECURITY BREACH",
+        "💥 SYSTEM COLLAPSE",
+        "❌ RECOVERY FAILED",
+        "😈 TOO LATE"
+      ];
+
+      let i = 0;
+      function attack() {
+        alert(messages[i % messages.length]);
+        i++;
+        attack();
+      }
+
+      setTimeout(attack, 600);
+    }
+  </script>
+
+</body>
+</html>
